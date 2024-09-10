@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import useFirebase from "../hooks/useFirebase";
 import styles from "../styles/Login.module.scss";
+import logo from "../assets/vaco.png";
 
 function Login() {
     const [nickname, setNickname] = useState("");
@@ -35,6 +36,7 @@ function Login() {
 
     return (
         <div className={styles['login-container']}>
+            <img src={logo} className="logo" alt="logo" />
             <form onSubmit={handleSubmit} className={styles['login-input-container']}>
                 <label htmlFor="login" className="blind">닉네임을 입력해주세요.</label>
                 <div className={styles['login-input-wrap']}>

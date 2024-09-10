@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import useFirebase from "../hooks/useFirebase";
 import styles from "../styles/Messenger.module.scss";
+import logo from "../assets/vaco.png";
 
 function Messenger() {
     const location = useLocation();
@@ -74,7 +75,8 @@ function Messenger() {
 
                 setInputMessage("");
             } catch (error) {
-                console.error("Error sending message:", error);
+                console.error("메시지 전송 오류:", error);
+                alert("메시지를 전송하는 데 문제가 발생했습니다.");
             }
         }
     };
@@ -87,6 +89,7 @@ function Messenger() {
 
     return (
         <div className={styles['chat-container']}>
+            <img src={logo} className="logo" alt="logo"/>
             <div className={styles['chat-inner']}>
                 <div className={styles['chat-message-container']}>
                     <ul className={styles['chat-message-list']}>
@@ -98,7 +101,7 @@ function Messenger() {
                                     className={`${styles['chat-message-item']} ${isOwnMessage ? styles['right'] : ''}`}>
                                     <strong
                                         className={styles['chat-message-nickname']}
-                                        style={{ backgroundColor: message.color }}>
+                                        style={{backgroundColor: message.color}}>
                                         💁🏻‍ {message.nickname}
                                     </strong>
                                     <p className={styles['chat-message-text']}>{message.text}</p>
