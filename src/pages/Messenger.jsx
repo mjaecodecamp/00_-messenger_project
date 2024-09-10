@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { ref, set, onValue, push } from 'firebase/database';
 import useFirebase from "../hooks/useFirebase";
 import styles from "../styles/Messenger.module.scss";
 import logo from "../assets/vaco.png";
@@ -19,24 +19,15 @@ function Messenger() {
     const [inputMessage, setInputMessage] = useState("");
 
     useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const docRef = doc(db, "chat", "messages");
-                const docSnap = await getDoc(docRef);
+        const messagesRef = ref(db, "chat/messages");
 
-                if (docSnap.exists()) {
-                    setMessages(docSnap.data().messages || []);
-                } else {
-                    await setDoc(docRef, { messages: [] });
-                    setMessages([]);
-                }
-            } catch (error) {
-                console.error("메시지 가져오기 오류:", error);
-                alert("메시지를 가져오는 데 문제가 발생했습니다.");
-            }
-        };
+        // 실시간으로 메시지 목록을 받아옴
+        const unsubscribe = onValue(messagesRef, (snapshot) => {
+            const data = snapshot.val();
+            setMessages(data ? Object.values(data) : []);
+        });
 
-        fetchMessages();
+        return () => unsubscribe();
     }, [db]);
 
     const handleInputChange = (e) => {
@@ -62,16 +53,9 @@ function Messenger() {
                     color: generateHexCode()
                 };
 
-                const docRef = doc(db, "chat", "messages");
-
-                await updateDoc(docRef, {
-                    messages: arrayUnion(newMessage)
-                });
-
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setMessages(docSnap.data().messages || []);
-                }
+                const messagesRef = ref(db, "chat/messages");
+                const newMessageRef = push(messagesRef);
+                await set(newMessageRef, newMessage);
 
                 setInputMessage("");
             } catch (error) {
