@@ -48,13 +48,11 @@ function Messenger() {
         if (inputMessage.trim()) {
             try {
                 const currentDateTime = new Date();
-                const formattedDateTime = new Intl.DateTimeFormat('ko-KR', {
-                    month: 'long',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true
-                }).format(currentDateTime);
+                const hours = currentDateTime.getHours();
+                const minutes = currentDateTime.getMinutes();
+                const ampm = hours >= 12 ? '오후' : '오전';
+                const formattedHours = hours % 12 || 12;
+                const formattedDateTime = `${currentDateTime.getMonth() + 1}월 ${currentDateTime.getDate()}일 ${ampm} ${formattedHours}시 ${minutes}분`;
 
                 const newMessage = {
                     nickname: nickname,
