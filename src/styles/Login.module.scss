@@ -2,7 +2,7 @@
   &-container {
     background: url("../assets/background.jpg") no-repeat center center / cover;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
   }
 
   &-input {
@@ -19,8 +19,14 @@
     outline: none;
     font-weight: bold;
 
-    &:focus {
+    &:focus,
+    &:active {
       width: 300px;
+    }
+
+    &:-webkit-autofill {
+      background-color: transparent;
+      color: #fff;
     }
 
     &::placeholder {
